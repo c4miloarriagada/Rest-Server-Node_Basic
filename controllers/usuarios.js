@@ -1,40 +1,68 @@
 const {response} = require('express')
+const bcryptjs = require('bcryptjs')
+const User = require('../models/usuario');
+const usuario = require('../models/usuario');
 
 
-const usuariosGET = (req, res=response)=> {
+
+const usuariosGET = async(req, res=response)=> {
 
 
-    const {q, nombre = 'no name', apikey,page= 1, limit} = req.query;
-
-    res.json({  
-        msg: 'get API - controlador',
-        q,
-        nombre,
-        apikey,
-        page,
-        limit
-    })
-  }
-
-const usuariosPost =  (req, res)=> {
    
-    const {nombre, edad} = req.body;
+    const { limite = 5, desde = 0 } =req.query
+    const query = {state: true}
 
-    res.status(201).json({
-        
-        msg: 'post API - controlador',
-        nombre,
-        edad
+    //PODRIAMOS VALIDAR QUE SEA UN NUMERO ANTES DE ENVIARLO A LAS FUNCIONES
+       
+    // const usuarios = await User.find(query)
+    //     .skip(Number(desde))
+    //     .limit(Number(limite))
+
+    // const total = await User.count(query)
+
+    const [total, usuarios] = await Promise.all([ //promesas en arreglo se desestructuran los nombres de constantes
+      User.countDocuments(query),
+      User.find(query)
+        .skip(Number(desde))
+        .limit(Number(limite))
+    ])
+
+    res.json({ 
+      total, 
+      usuarios
     })
   }
 
-const usuariosPut =   (req, res = response)=> {
+const usuariosPost =  async(req, res)=> {
+   
+    const {name, mail, password, rol} = req.body; // const {google, ...resto} = req.body 
+    const usuario = new User({name, mail, password, rol}) // const usuario = new User(resto)
 
-    const {id} = req.params
+  //encriptar la contraseña
+   const salt = bcryptjs.genSaltSync(); //cuantas vueltas quires que encripte por default es 10 <-- es bueno
+   usuario.password = bcryptjs.hashSync(password, salt) //asigno el pasword con el numero de vueltas que recibio del genSaltSync
+  
+  
+   //guardar en bd
+    await usuario.save();
+
+    res.status(201).json(usuario)
+  }
+
+const usuariosPut =   async(req, res = response)=> {
+
+    const { id } = req.params;
+    const { _id, password, google, correo, ...resto } = req.body;
+
+    if( password ){
+      const salt = bcryptjs.genSaltSync();
+      resto.password = bcryptjs.hashSync(password, salt); 
+    }
+
+    const usuario = await User.findByIdAndUpdate(id, resto);
 
     res.status(200).json({
-        msg: 'put API - controlador',
-        id
+        usuario
     })
 }
 
@@ -46,11 +74,15 @@ const usuariosPatch = (req, res)=> {
   }
 
 
-const usuariosDelete=   (req, res)=> {
-    res.json({
-        
-        msg: 'delete API - controlador'
-    })
+const usuariosDelete=   async(req, res)=> {
+
+  const {id} = req.params
+
+  //borrar fisicamente
+  //const usuario = await User.findByIdAndDelete(id);
+  const usuario = await User.findByIdAndUpdate(id, {state: false});
+
+    res.json(usuario)
   }
 
   module.exports={
