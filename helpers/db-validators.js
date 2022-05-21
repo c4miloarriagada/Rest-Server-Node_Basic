@@ -1,5 +1,5 @@
-const Role = require("../models/role");
-const User = require("../models/usuario");
+const { Categoria, Role , User } = require("../models");
+
 
 const esRolValido = async (rol = "") => {
   //checkeo personalizao evalua el rol, asigna rol en vacio para que choque con la validacion de abajo
@@ -24,8 +24,37 @@ const existeUsuarioID = async (id = "") => {
   }
 };
 
+const existeCategoriaId = async (id ='') => {
+
+  const existeCategoria = await Categoria.findById(id);
+  
+  if (!existeCategoria) {
+    throw new Error(`La Categoria: ${id}, no existe`);
+  }
+};
+
+// const categoriaExisteActualizar = async (name = "", id) => {
+//   name = name.toUpperCase();
+ 
+//   const nombreActual = await Categoria.findOne({ id });
+ 
+//   if (nombreActual.name !== name) {
+//     const existeCategoria = await Categoria.findOne({ nombre });
+//     if (existeCategoria) {
+//       throw new Error(`La categoria ${nombre} ya existe`);
+//     }
+//   }
+// };
+
+
+
+
+
 module.exports = {
   esRolValido,
   emailExiste,
   existeUsuarioID,
+  existeCategoriaId,
+  
+  
 };

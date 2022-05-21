@@ -49,38 +49,36 @@ const login = async (req, res = response) => {
 
 const googleSignIn = async (req, res = response) => {
   const { id_token } = req.body;
-    
+
   try {
-    const {name, img, mail} = await googleVerify(id_token);
-   
-    let usuario = await Usuario.findOne({mail});
+    const { name, img, mail } = await googleVerify(id_token);
 
-    if(!usuario){
-        const data = {
-            name,
-            mail,
-            password: ':P',
-            img,
-            rol: 'USER_ROLE',
-            google: true
-        }
-        
+    let usuario = await Usuario.findOne({ mail });
 
-        usuario = new Usuario( data )
-        await usuario.save();
+    if (!usuario) {
+      const data = {
+        name,
+        mail,
+        password: ":P",
+        img,
+        rol: "USER_ROLE",
+        google: true,
+      };
+
+      usuario = new Usuario(data);
+      await usuario.save();
     }
-    if(!usuario.state){
-        return res.status(401).json({
-            msg: 'Hablar con el admin , usuario bloqueado'
-        })
+    if (!usuario.state) {
+      return res.status(401).json({
+        msg: "Hablar con el admin , usuario bloqueado",
+      });
     }
 
-   
     const token = await jwtGenerator(usuario.id);
-  
+
     res.json({
       usuario,
-      token
+      token,
     });
   } catch (error) {
     res.status(400).json({

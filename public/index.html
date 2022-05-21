@@ -34,7 +34,7 @@
       function handleCredentialResponse(response) {
         //google Token = ID_TOKEN
         const body = { id_token: response.credential };
-        fetch("https://nodeserverbasico.herokuapp.com/api/auth/google", {
+        fetch("http://localhost:8080/api/auth/google", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -43,7 +43,6 @@
         })
           .then((resp) => resp.json())
           .then((resp) => {
-            console.log(resp);
             localStorage.setItem('email', resp.usuario.mail)
           })
           .catch(console.warn);
@@ -56,7 +55,7 @@
           google.accounts.id.revoke(localStorage.getItem('mail'), done => {
               localStorage.clear();
               location.reload()
-          })
+          });
       }
 
 
