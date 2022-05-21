@@ -53,7 +53,7 @@
       button.onclick = () => {
           google.accounts.id.disableAutoSelect()
 
-          google.accounts.id.revoke(localStorage.getId('mail'), done => {
+          google.accounts.id.revoke(localStorage.getItem('mail'), done => {
               localStorage.clear();
               location.reload()
           })
