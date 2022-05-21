@@ -29,12 +29,12 @@
     <button id="google_signout"> Signout </button>
 
 
-    <script src="https://nodeserverbasico.herokuapp.com/api/auth/google" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
       function handleCredentialResponse(response) {
         //google Token = ID_TOKEN
         const body = { id_token: response.credential };
-        fetch("http://localhost:8080/api/auth/google", {
+        fetch("https://nodeserverbasico.herokuapp.com/api/auth/google", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -53,7 +53,7 @@
       button.onclick = () => {
           google.accounts.id.disableAutoSelect()
 
-          google.accounts.id.revoke(localStorage.getItem('mail'), done => {
+          google.accounts.id.revoke(localStorage.get('mail'), done => {
               localStorage.clear();
               location.reload()
           })
