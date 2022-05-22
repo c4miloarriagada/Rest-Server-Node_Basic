@@ -1,5 +1,4 @@
-const { Categoria, Role , User } = require("../models");
-
+const { Categoria, Role, User, Producto } = require("../models");
 
 const esRolValido = async (rol = "") => {
   //checkeo personalizao evalua el rol, asigna rol en vacio para que choque con la validacion de abajo
@@ -24,20 +23,27 @@ const existeUsuarioID = async (id = "") => {
   }
 };
 
-const existeCategoriaId = async (id ='') => {
-
+const existeCategoriaId = async (id = "") => {
   const existeCategoria = await Categoria.findById(id);
-  
+
   if (!existeCategoria) {
     throw new Error(`La Categoria: ${id}, no existe`);
   }
 };
 
+const existeProductoId = async (id = "") => {
+  const existeProducto = await Producto.findById(id);
+
+  if (!existeProducto) {
+    throw new Error(`El prodcuto : ${id}, no existe`);
+  }
+};
+
 // const categoriaExisteActualizar = async (name = "", id) => {
 //   name = name.toUpperCase();
- 
+
 //   const nombreActual = await Categoria.findOne({ id });
- 
+
 //   if (nombreActual.name !== name) {
 //     const existeCategoria = await Categoria.findOne({ nombre });
 //     if (existeCategoria) {
@@ -46,15 +52,10 @@ const existeCategoriaId = async (id ='') => {
 //   }
 // };
 
-
-
-
-
 module.exports = {
   esRolValido,
   emailExiste,
   existeUsuarioID,
   existeCategoriaId,
-  
-  
+  existeProductoId,
 };

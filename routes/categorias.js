@@ -44,6 +44,7 @@ router.put(
   [
     validatorJWT,
     check("name", "El nombre es obligatorio").not().isEmpty(),
+    check('id', 'Debe ser un ID valido').isMongoId(),
     check("id").custom(existeCategoriaId),
     validarCampos,
   ],
