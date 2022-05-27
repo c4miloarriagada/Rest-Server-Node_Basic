@@ -5,6 +5,7 @@ const obtentenerProductos = async (req, res = response) => {
   const { limite = 5, desde = 0 } = req.query;
   const query = { state: true };
 
+ 
   const [total, productos] = await Promise.all([
     //promesas en arreglo se desestructuran los nombres de constantes
     Producto.countDocuments(query),

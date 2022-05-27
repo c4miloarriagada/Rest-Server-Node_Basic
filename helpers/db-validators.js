@@ -39,6 +39,21 @@ const existeProductoId = async (id = "") => {
   }
 };
 
+const validarColecciones = (coleccion = '', colecciones = [])=>{
+
+    
+    const incluida = colecciones.includes(coleccion)
+    if(!incluida){
+      throw new Error(`la coleccion ${coleccion}, no es permitida, permitidas:  ${colecciones}`);
+    }
+  
+    return true;
+  
+  }
+
+
+
+
 // const categoriaExisteActualizar = async (name = "", id) => {
 //   name = name.toUpperCase();
 
@@ -58,4 +73,5 @@ module.exports = {
   existeUsuarioID,
   existeCategoriaId,
   existeProductoId,
+  validarColecciones
 };
